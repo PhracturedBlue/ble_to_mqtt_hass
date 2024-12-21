@@ -1,0 +1,20 @@
+# Nice! Nano board configuration
+
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_NICENANO
+
+config BT_CTLR
+	default BT
+
+if USB_DEVICE_STACK
+
+config UART_CONSOLE
+	default CONSOLE
+
+config USB_DEVICE_INITIALIZE_AT_BOOT
+	default y
+
+endif # USB_DEVICE_STACK
+
+endif # BOARD_NICENANO

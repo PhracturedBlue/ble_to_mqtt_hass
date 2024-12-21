@@ -1,0 +1,22 @@
+From 9faff7cc74a60e3f7d0c6c4bf89d8d720e8c40fb Mon Sep 17 00:00:00 2001
+From: Geoffrey Hausheer <rc2012@pblue.org>
+Date: Fri, 5 Jul 2024 09:29:28 -0700
+Subject: [PATCH] luasocket: Enable serial module
+
+Signed-off-by: Geoffrey Hausheer <rc2012@pblue.org>
+---
+ lang/luasocket/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lang/luasocket/Makefile b/lang/luasocket/Makefile
+index f5d458c28cd20..a936ce5cb91c7 100644
+--- a/lang/luasocket/Makefile
++++ b/lang/luasocket/Makefile
+@@ -83,6 +83,7 @@ define Package/luasocket/install
+ 	$(INSTALL_DIR) $(1)/usr/lib/lua/socket
+ 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/{ftp,http,smtp,tp,url,headers}.lua $(1)/usr/lib/lua/socket
+ 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/unix.so $(1)/usr/lib/lua/socket
++	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/serial.so $(1)/usr/lib/lua/socket
+ 	ln -sf ../socket-3.0.0.so $(1)/usr/lib/lua/socket/core.so
+ endef
+ 

@@ -1,0 +1,141 @@
+/*
+ * Copyright (c) 2020 Tobias Svehagen
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+#include <nordic/nrf52840_qiaa.dtsi>
+#include "nicenano-pinctrl.dtsi"
+#include "nicenano_connector.dtsi"
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+/ {
+	model = "Nice Nano";
+	compatible = "custom,nicenano";
+
+	chosen {
+		zephyr,console = &usb_cdc_acm_uart;
+		zephyr,shell-uart = &usb_cdc_acm_uart;
+		zephyr,uart-mcumgr = &usb_cdc_acm_uart;
+		zephyr,bt-mon-uart = &usb_cdc_acm_uart;
+		zephyr,bt-c2h-uart = &usb_cdc_acm_uart;
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &code_partition;
+		zephyr,ieee802154 = &ieee802154;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		led0: led_0 {
+			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
+			label = "Blue LED";
+		};
+	};
+
+        vbatt {
+                compatible = "zmk,battery-voltage-divider";
+                io-channels = <&adc 2>;
+                output-ohms = <2000000>;
+                full-ohms = <(2000000 + 806000)>;
+        };
+
+	/* These aliases are provided for compatibility with samples */
+	aliases {
+		led0 = &led0;
+		watchdog0 = &wdt0;
+	};
+};
+
+&adc {
+	status = "okay";
+};
+
+&uicr {
+	gpio-as-nreset;
+};
+
+&gpiote {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+&uart0 {
+	compatible = "nordic,nrf-uarte";
+	status = "okay";
+	current-speed = <115200>;
+	pinctrl-0 = <&uart0_default>;
+	pinctrl-1 = <&uart0_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&i2c0 {
+	compatible = "nordic,nrf-twi";
+	status = "okay";
+	pinctrl-0 = <&i2c0_default>;
+	pinctrl-1 = <&i2c0_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&spi1 {
+	compatible = "nordic,nrf-spi";
+	status = "okay";
+	pinctrl-0 = <&spi1_default>;
+	pinctrl-1 = <&spi1_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&ieee802154 {
+	status = "okay";
+};
+
+&flash0 {
+
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+                sd_partition: partition@0 {
+                    reg = <0x00000000 0x00026000>;
+                };
+                code_partition: partition@26000 {
+                    reg = <0x00026000 0x000c6000>;
+                };
+
+                /*
+                 * The flash starting at 0x000ec000 and ending at
+                 * 0x000f3fff is reserved for use by the application.
+                 */
+
+                /*
+                 * Storage partition will be used by FCB/LittleFS/NVS
+                 * if enabled.
+                 */
+                storage_partition: partition@ec000 {
+                    reg = <0x000ec000 0x00008000>;
+                };
+
+                boot_partition: partition@f4000 {
+                    reg = <0x000f4000 0x0000c000>;
+                };
+
+	};
+};
+
+zephyr_udc0: &usbd {
+	compatible = "nordic,nrf-usbd";
+	status = "okay";
+
+	usb_cdc_acm_uart: cdc-acm-uart {
+		compatible = "zephyr,cdc-acm-uart";
+	};
+};

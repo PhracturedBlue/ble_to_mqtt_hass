@@ -1,0 +1,12 @@
+diff --git a/luasrcdiet/lparser.lua b/luasrcdiet/lparser.lua
+index 334243e..6a5508d 100644
+--- a/luasrcdiet/lparser.lua
++++ b/luasrcdiet/lparser.lua
+@@ -616,6 +616,7 @@ local function primaryexp(v)
+     if c == "." then  -- field
+       field(v)
+     elseif c == "[" then  -- '[' exp1 ']'
++      v.k = "VLOCAL"
+       yindex()
+     elseif c == ":" then  -- ':' NAME funcargs
+       nextt()
